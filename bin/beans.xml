@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/tx 
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+http://www.springframework.org/schema/aop 
+http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+">
+	<context:annotation-config />
+	<context:component-scan base-package="cn.shandian.tianying" />
+	<aop:aspectj-autoproxy />
+<!--  	<aop:config>
+		<aop:pointcut expression="execution(* cn.shandian.tianying.aop.*.*(..))"
+			id="xmlAspect" />
+		<aop:aspect id="TestAspect" ref="xAspect">
+			<aop:before method="doBefore" pointcut-ref="xmlAspect" />
+			<aop:after method="doAfter" pointcut-ref="xmlAspect" />
+			<aop:around method="doAround" pointcut-ref="xmlAspect" />
+			<aop:after-returning returning="retVal" method="doAfterReturning"
+				pointcut-ref="xmlAspect" />
+			<aop:after-throwing throwing="ex" method="doThrow"
+				pointcut-ref="xmlAspect" />
+		</aop:aspect>
+
+	</aop:config>
+	<bean id="xAspect" class="cn.shandian.tianying.aop.XmlAspect"></bean>
+
+-->
+	<context:property-placeholder location="db.properties" />
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${driver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!--dataSource属性指定要用到的连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<!--configLocation属性指定mybatis的核心配置文件-->
+		 <property name="configLocation" value="Configuration.xml" 
+			/> 
+	</bean>
+
+
+	<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!--sqlSessionFactory属性指定要用到的SqlSessionFactory实例 -->
+		<!--<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		mapperInterface属性指定映射器接口，用于实现此接口并生成映射器对象 -->
+		<property name="mapperInterface" value="cn.shandian.tianying.inter.IUser" />
+	</bean>
+    <bean id ="user" class="cn.shandian.tianying.User.User"></bean>
+	<!-- <bean id = "serviceA" class = "cn.shandian.tianying.aop.ServiceA"></bean> 
+		<bean id = "serviceB" class = "cn.shandian.tianying.aop.ServiceB"></bean> -->
+</beans>
